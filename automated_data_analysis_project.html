@@ -1,0 +1,720 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0d1117;--bg2:#161b22;--bg3:#1c2333;--bg4:#21262d;
+    --border:#30363d;--border2:#3d444d;
+    --text:#e6edf3;--text2:#8b949e;--text3:#656d76;
+    --blue:#58a6ff;--blue2:#1f6feb;--blue3:#0d419d;
+    --green:#3fb950;--green2:#238636;
+    --purple:#bc8cff;--purple2:#6e40c9;
+    --orange:#e3b341;--red:#f85149;
+    --teal:#39d353;--cyan:#79c0ff;
+    --font:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace;
+  }
+  body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.6}
+  
+  .wrapper{padding:20px 0;min-height:100vh}
+  
+  /* Header */
+  .hero{
+    background:linear-gradient(135deg,#0d1117 0%,#1a1f35 50%,#0d1117 100%);
+    border:1px solid var(--border);border-radius:12px;
+    padding:28px 28px 24px;margin-bottom:20px;
+    position:relative;overflow:hidden
+  }
+  .hero::before{
+    content:'';position:absolute;top:-40px;right:-40px;
+    width:260px;height:260px;
+    background:radial-gradient(circle,rgba(88,166,255,.12) 0%,transparent 70%);
+    pointer-events:none
+  }
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:rgba(63,185,80,.12);border:1px solid rgba(63,185,80,.35);
+    color:var(--green);padding:4px 12px;border-radius:20px;
+    font-size:11px;font-weight:500;letter-spacing:.5px;margin-bottom:14px
+  }
+  .hero-badge::before{
+    content:'';width:6px;height:6px;background:var(--green);
+    border-radius:50%;animation:pulse 2s infinite
+  }
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+  .hero h1{font-size:22px;font-weight:600;margin-bottom:6px;letter-spacing:-.3px}
+  .hero h1 span{color:var(--blue)}
+  .hero p{color:var(--text2);font-size:13px;max-width:480px}
+  .tech-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+  .tag{
+    padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;
+    display:flex;align-items:center;gap:4px
+  }
+  .tag-blue{background:rgba(88,166,255,.12);color:var(--blue);border:1px solid rgba(88,166,255,.25)}
+  .tag-purple{background:rgba(188,140,255,.12);color:var(--purple);border:1px solid rgba(188,140,255,.25)}
+  .tag-green{background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.25)}
+  .tag-orange{background:rgba(227,179,65,.12);color:var(--orange);border:1px solid rgba(227,179,65,.25)}
+  .tag-red{background:rgba(248,81,73,.12);color:var(--red);border:1px solid rgba(248,81,73,.25)}
+  .tag-cyan{background:rgba(121,192,255,.12);color:var(--cyan);border:1px solid rgba(121,192,255,.25)}
+
+  /* Tabs */
+  .tabs{display:flex;gap:4px;background:var(--bg2);border:1px solid var(--border);
+    border-radius:10px;padding:4px;margin-bottom:20px}
+  .tab{
+    flex:1;padding:8px 10px;border-radius:7px;border:none;
+    background:transparent;color:var(--text2);cursor:pointer;
+    font-family:var(--font);font-size:12px;font-weight:500;
+    transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px
+  }
+  .tab.active{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
+  .tab:hover:not(.active){color:var(--text);background:rgba(255,255,255,.04)}
+
+  /* Cards */
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px}
+  .card-title{font-size:12px;font-weight:500;color:var(--text2);text-transform:uppercase;
+    letter-spacing:.6px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+  .card-title .icon{font-size:14px}
+
+  /* Stat grid */
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+  .stat-card{
+    background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+    padding:14px 16px;position:relative;overflow:hidden;cursor:pointer;
+    transition:border-color .2s,transform .15s
+  }
+  .stat-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+  .stat-card::after{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:10px 10px 0 0
+  }
+  .stat-card.blue::after{background:var(--blue)}
+  .stat-card.green::after{background:var(--green)}
+  .stat-card.purple::after{background:var(--purple)}
+  .stat-card.orange::after{background:var(--orange)}
+  .stat-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+  .stat-value{font-size:26px;font-weight:600;margin:6px 0 4px;line-height:1}
+  .stat-delta{font-size:11px;font-weight:500;display:flex;align-items:center;gap:3px}
+  .up{color:var(--green)}.down{color:var(--red)}
+
+  /* Sections */
+  .section-hidden{display:none}
+  .section-active{display:block}
+
+  /* Pipeline flow */
+  .pipeline{display:flex;align-items:center;gap:0;overflow-x:auto;padding:4px 0;margin-bottom:16px}
+  .pipe-step{
+    flex-shrink:0;background:var(--bg3);border:1px solid var(--border);
+    border-radius:8px;padding:10px 14px;min-width:120px;text-align:center;
+    cursor:pointer;transition:all .2s;position:relative
+  }
+  .pipe-step:hover{border-color:var(--blue);background:rgba(88,166,255,.06)}
+  .pipe-step.active-step{border-color:var(--blue);background:rgba(88,166,255,.1)}
+  .pipe-step .ps-icon{font-size:18px;margin-bottom:3px}
+  .pipe-step .ps-name{font-size:11px;font-weight:600;color:var(--text)}
+  .pipe-step .ps-tech{font-size:10px;color:var(--text3);margin-top:1px}
+  .pipe-arrow{color:var(--text3);font-size:16px;padding:0 4px;flex-shrink:0}
+
+  /* Code block */
+  .code-block{
+    background:var(--bg);border:1px solid var(--border);border-radius:8px;
+    padding:14px;font-family:var(--mono);font-size:11px;line-height:1.7;
+    overflow-x:auto;margin:10px 0;position:relative
+  }
+  .code-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:8px 14px;background:var(--bg3);border:1px solid var(--border);
+    border-bottom:none;border-radius:8px 8px 0 0;margin-top:10px
+  }
+  .code-header+.code-block{border-radius:0 0 8px 8px;margin-top:0}
+  .code-lang{font-size:11px;color:var(--text3);font-family:var(--mono)}
+  .copy-btn{
+    font-size:10px;color:var(--text3);background:transparent;border:1px solid var(--border);
+    border-radius:4px;padding:2px 8px;cursor:pointer;font-family:var(--font);
+    transition:all .2s
+  }
+  .copy-btn:hover{color:var(--text);border-color:var(--border2)}
+  .kw{color:#ff7b72}.fn{color:#d2a8ff}.st{color:#a5d6ff}
+  .cm{color:#8b949e;font-style:italic}.num{color:#79c0ff}.op{color:#ff7b72}
+
+  /* ML Model card */
+  .model-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .model-card{
+    background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+    padding:14px;cursor:pointer;transition:all .2s
+  }
+  .model-card:hover{border-color:var(--purple);transform:translateY(-1px)}
+  .model-name{font-size:13px;font-weight:600;margin-bottom:4px}
+  .model-type{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+  .acc-bar{height:4px;background:var(--bg4);border-radius:2px;margin:8px 0 4px;overflow:hidden}
+  .acc-fill{height:100%;border-radius:2px;transition:width .8s ease}
+  .acc-label{font-size:11px;color:var(--text2);display:flex;justify-content:space-between}
+
+  /* Chart bars */
+  .bar-chart{display:flex;align-items:flex-end;gap:6px;height:120px;padding:0 0 0 0}
+  .bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+  .bar{width:100%;border-radius:4px 4px 0 0;transition:height .8s ease;cursor:pointer;min-width:12px}
+  .bar:hover{filter:brightness(1.2)}
+  .bar-label{font-size:10px;color:var(--text3);text-align:center}
+
+  /* Automation steps */
+  .auto-step{
+    display:flex;align-items:flex-start;gap:12px;padding:10px 0;
+    border-bottom:1px solid var(--border)
+  }
+  .auto-step:last-child{border-bottom:none}
+  .step-num{
+    width:24px;height:24px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;margin-top:1px
+  }
+  .step-title{font-size:13px;font-weight:500;margin-bottom:3px}
+  .step-desc{font-size:12px;color:var(--text2)}
+  .step-badge{
+    display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;
+    font-weight:600;margin-left:6px;vertical-align:middle
+  }
+
+  /* Timeline */
+  .timeline{position:relative}
+  .timeline::before{
+    content:'';position:absolute;left:11px;top:6px;bottom:6px;
+    width:1px;background:var(--border)
+  }
+  .tl-item{display:flex;gap:14px;padding:0 0 14px 0;position:relative}
+  .tl-dot{
+    width:23px;height:23px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:10px;font-weight:600;position:relative;z-index:1;border:2px solid var(--bg2)
+  }
+  .tl-content{padding-top:2px}
+  .tl-title{font-size:12px;font-weight:600;margin-bottom:2px}
+  .tl-detail{font-size:11px;color:var(--text2)}
+
+  /* Power BI mockup */
+  .pbi-mock{background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .pbi-header{
+    background:#1e1e2d;border-bottom:1px solid var(--border);
+    padding:8px 14px;display:flex;align-items:center;gap:8px
+  }
+  .pbi-dot{width:6px;height:6px;border-radius:50%}
+  .pbi-title{font-size:11px;color:var(--text3);font-family:var(--mono)}
+  .pbi-body{padding:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .pbi-widget{background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:10px}
+  .pbi-wt{font-size:10px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px}
+  .donut{width:60px;height:60px;margin:0 auto;position:relative}
+  .donut svg{width:100%;height:100%}
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:4px;height:4px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+  @media(max-width:540px){
+    .stat-grid{grid-template-columns:1fr 1fr}
+    .model-grid{grid-template-columns:1fr}
+    .pbi-body{grid-template-columns:1fr}
+  }
+</style>
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">● LIVE PIPELINE</div>
+    <h1>Automated <span>Data Analytics</span> Platform</h1>
+    <p>End-to-end data pipeline integrating Python, AI/ML models, Power BI dashboards and Excel reports — fully automated.</p>
+    <div class="tech-tags">
+      <span class="tag tag-blue">🐍 Python</span>
+      <span class="tag tag-purple">🤖 AI / ML</span>
+      <span class="tag tag-orange">📊 Power BI</span>
+      <span class="tag tag-green">📗 Excel</span>
+      <span class="tag tag-cyan">⚙️ Automation</span>
+      <span class="tag tag-red">🔄 Scheduled Jobs</span>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('overview',this)">📌 Overview</button>
+    <button class="tab" onclick="showTab('pipeline',this)">🔁 Pipeline</button>
+    <button class="tab" onclick="showTab('mlmodels',this)">🧠 ML Models</button>
+    <button class="tab" onclick="showTab('code',this)">💻 Code</button>
+    <button class="tab" onclick="showTab('powerbi',this)">📊 Power BI</button>
+    <button class="tab" onclick="showTab('automation',this)">⚡ Automation</button>
+  </div>
+
+  <!-- ===== OVERVIEW ===== -->
+  <div id="tab-overview" class="section-active">
+    <div class="stat-grid">
+      <div class="stat-card blue" onclick="showTab('pipeline',document.querySelectorAll('.tab')[1])">
+        <div class="stat-label">Data Sources</div>
+        <div class="stat-value" style="color:var(--blue)">12</div>
+        <div class="stat-delta up">↑ 3 new this week</div>
+      </div>
+      <div class="stat-card green" onclick="showTab('mlmodels',document.querySelectorAll('.tab')[2])">
+        <div class="stat-label">ML Models Active</div>
+        <div class="stat-value" style="color:var(--green)">4</div>
+        <div class="stat-delta up">↑ 94.2% avg accuracy</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-label">Reports Generated</div>
+        <div class="stat-value" style="color:var(--purple)">287</div>
+        <div class="stat-delta up">↑ 12 today</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">Rows Processed</div>
+        <div class="stat-value" style="color:var(--orange)">2.4M</div>
+        <div class="stat-delta up">↑ 340K today</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px">
+
+      <div class="card">
+        <div class="card-title"><span class="icon">📈</span>Weekly Processed Records</div>
+        <div class="bar-chart" id="barChart">
+          <div class="bar-wrap"><div class="bar" style="height:60px;background:var(--blue2)" id="b1"></div><div class="bar-label">Mon</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:85px;background:var(--blue2)"></div><div class="bar-label">Tue</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:72px;background:var(--blue2)"></div><div class="bar-label">Wed</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:100px;background:var(--blue)"></div><div class="bar-label">Thu</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:88px;background:var(--blue2)"></div><div class="bar-label">Fri</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:50px;background:var(--bg4)"></div><div class="bar-label">Sat</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:40px;background:var(--bg4)"></div><div class="bar-label">Sun</div></div>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:10px">
+          <span style="font-size:11px;color:var(--text3)">● Active days</span>
+          <span style="font-size:11px;color:var(--text3)">○ Weekends (reduced)</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🎯</span>System Health</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--green2);color:var(--green)">✓</div>
+            <div class="tl-content"><div class="tl-title">Ingestion Layer</div><div class="tl-detail">Running · 99.9% uptime</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--green2);color:var(--green)">✓</div>
+            <div class="tl-content"><div class="tl-title">ML Inference</div><div class="tl-detail">Running · 4 models loaded</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--green2);color:var(--green)">✓</div>
+            <div class="tl-content"><div class="tl-title">Power BI Refresh</div><div class="tl-detail">Last: 2 min ago</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--orange);color:#000" >!</div>
+            <div class="tl-content"><div class="tl-title">Excel Export</div><div class="tl-detail" style="color:var(--orange)">Queue: 3 pending</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--blue2);color:var(--blue)">↻</div>
+            <div class="tl-content"><div class="tl-title">Model Retraining</div><div class="tl-detail">Scheduled · Sun 02:00</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PIPELINE ===== -->
+  <div id="tab-pipeline" class="section-hidden">
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title"><span class="icon">🔁</span>End-to-End Data Pipeline</div>
+      <div class="pipeline">
+        <div class="pipe-step active-step" onclick="showPipeInfo(0)">
+          <div class="ps-icon">🗄️</div><div class="ps-name">Data Sources</div><div class="ps-tech">SQL · APIs · CSV</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step" onclick="showPipeInfo(1)">
+          <div class="ps-icon">🐍</div><div class="ps-name">ETL / Python</div><div class="ps-tech">pandas · sqlalchemy</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step" onclick="showPipeInfo(2)">
+          <div class="ps-icon">🧹</div><div class="ps-name">Clean & Transform</div><div class="ps-tech">numpy · sklearn</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step" onclick="showPipeInfo(3)">
+          <div class="ps-icon">🤖</div><div class="ps-name">AI/ML Models</div><div class="ps-tech">sklearn · xgboost</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step" onclick="showPipeInfo(4)">
+          <div class="ps-icon">📊</div><div class="ps-name">Power BI</div><div class="ps-tech">Direct Query</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step" onclick="showPipeInfo(5)">
+          <div class="ps-icon">📗</div><div class="ps-name">Excel Report</div><div class="ps-tech">openpyxl</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step" onclick="showPipeInfo(6)">
+          <div class="ps-icon">📧</div><div class="ps-name">Email / Alerts</div><div class="ps-tech">smtplib · slack</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" id="pipeInfoCard">
+      <div class="card-title"><span class="icon">🗄️</span>Data Sources</div>
+      <div id="pipeInfoBody">
+        <p style="color:var(--text2);font-size:13px">Connects to <strong style="color:var(--text)">12 data sources</strong> including PostgreSQL databases, REST APIs, CSV flat files, and Excel uploads. Scheduled ingestion every <strong style="color:var(--blue)">15 minutes</strong> via cron job.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <span class="tag tag-blue">PostgreSQL</span>
+          <span class="tag tag-green">REST APIs</span>
+          <span class="tag tag-orange">CSV Files</span>
+          <span class="tag tag-cyan">Excel Uploads</span>
+          <span class="tag tag-purple">S3 / Cloud</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ML MODELS ===== -->
+  <div id="tab-mlmodels" class="section-hidden">
+    <div class="model-grid" style="margin-bottom:14px">
+      <div class="model-card">
+        <div class="model-type">Supervised · Classification</div>
+        <div class="model-name" style="color:var(--purple)">XGBoost Classifier</div>
+        <div class="acc-bar"><div class="acc-fill" style="width:96%;background:var(--purple)"></div></div>
+        <div class="acc-label"><span>Accuracy</span><span style="color:var(--purple)">96.2%</span></div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">Churn prediction · Customer segmentation</div>
+      </div>
+      <div class="model-card">
+        <div class="model-type">Time Series · Forecasting</div>
+        <div class="model-name" style="color:var(--blue)">LSTM Neural Net</div>
+        <div class="acc-bar"><div class="acc-fill" style="width:91%;background:var(--blue)"></div></div>
+        <div class="acc-label"><span>MAPE</span><span style="color:var(--blue)">4.1%</span></div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">30-day revenue forecast · Demand planning</div>
+      </div>
+      <div class="model-card">
+        <div class="model-type">NLP · Sentiment Analysis</div>
+        <div class="model-name" style="color:var(--green)">BERT Fine-tuned</div>
+        <div class="acc-bar"><div class="acc-fill" style="width:94%;background:var(--green)"></div></div>
+        <div class="acc-label"><span>F1 Score</span><span style="color:var(--green)">94.8%</span></div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">Customer reviews · Support ticket triage</div>
+      </div>
+      <div class="model-card">
+        <div class="model-type">Unsupervised · Clustering</div>
+        <div class="model-name" style="color:var(--orange)">K-Means + PCA</div>
+        <div class="acc-bar"><div class="acc-fill" style="width:88%;background:var(--orange)"></div></div>
+        <div class="acc-label"><span>Silhouette</span><span style="color:var(--orange)">0.71</span></div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">Product grouping · RFM segmentation</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="icon">🔄</span>Model Retraining Schedule</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--purple2);color:var(--purple)">①</div>
+          <div class="tl-content"><div class="tl-title">Data drift detected → trigger retraining</div><div class="tl-detail">evidently AI monitors distribution shift weekly</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--blue2);color:var(--blue)">②</div>
+          <div class="tl-content"><div class="tl-title">Auto hyperparameter tuning with Optuna</div><div class="tl-detail">50 trials, Bayesian optimization</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--green2);color:var(--green)">③</div>
+          <div class="tl-content"><div class="tl-title">Validation against holdout set</div><div class="tl-detail">Must exceed baseline by 1% to promote</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--orange);color:#000">④</div>
+          <div class="tl-content"><div class="tl-title">MLflow model registry + versioning</div><div class="tl-detail">Auto-rollback if degradation detected</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CODE ===== -->
+  <div id="tab-code" class="section-hidden">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+
+      <div>
+        <div class="code-header">
+          <span class="code-lang">pipeline.py — Main Orchestrator</span>
+          <button class="copy-btn" onclick="copyCode(this,'code1')">Copy</button>
+        </div>
+        <div class="code-block" id="code1"><span class="cm"># Automated Data Pipeline</span>
+<span class="kw">import</span> schedule, pandas <span class="kw">as</span> pd
+<span class="kw">from</span> sqlalchemy <span class="kw">import</span> create_engine
+<span class="kw">from</span> ml_models <span class="kw">import</span> run_inference
+<span class="kw">from</span> reports <span class="kw">import</span> generate_excel, push_powerbi
+
+<span class="kw">def</span> <span class="fn">run_pipeline</span>():
+    <span class="cm"># 1. Ingest data</span>
+    df = <span class="fn">ingest_all_sources</span>()
+
+    <span class="cm"># 2. Clean & transform</span>
+    df = <span class="fn">clean_and_feature_engineer</span>(df)
+
+    <span class="cm"># 3. Run ML inference</span>
+    df = <span class="fn">run_inference</span>(df)
+
+    <span class="cm"># 4. Push to Power BI dataset</span>
+    <span class="fn">push_powerbi</span>(df)
+
+    <span class="cm"># 5. Generate Excel report</span>
+    <span class="fn">generate_excel</span>(df)
+
+    <span class="cm"># 6. Send alert if anomaly</span>
+    <span class="fn">check_and_alert</span>(df)
+
+<span class="cm"># Schedule every 15 min</span>
+schedule.<span class="fn">every</span>(<span class="num">15</span>).minutes.<span class="fn">do</span>(run_pipeline)
+</div>
+      </div>
+
+      <div>
+        <div class="code-header">
+          <span class="code-lang">ml_models.py — AI Inference</span>
+          <button class="copy-btn" onclick="copyCode(this,'code2')">Copy</button>
+        </div>
+        <div class="code-block" id="code2"><span class="kw">import</span> mlflow, joblib
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="kw">class</span> <span class="fn">ModelPipeline</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.xgb = <span class="fn">load_model</span>(<span class="st">"xgb_churn_v3"</span>)
+        self.lstm = <span class="fn">load_model</span>(<span class="st">"lstm_forecast_v2"</span>)
+        self.bert = <span class="fn">load_model</span>(<span class="st">"bert_sentiment_v1"</span>)
+
+    <span class="kw">def</span> <span class="fn">run_inference</span>(self, df):
+        <span class="cm"># Churn prediction</span>
+        df[<span class="st">'churn_prob'</span>] = (
+            self.xgb.<span class="fn">predict_proba</span>(
+                df[FEATURE_COLS]
+            )[:, <span class="num">1</span>]
+        )
+        <span class="cm"># 30-day forecast</span>
+        df[<span class="st">'revenue_forecast'</span>] = (
+            self.lstm.<span class="fn">forecast</span>(df, <span class="num">30</span>)
+        )
+        <span class="cm"># Sentiment scoring</span>
+        df[<span class="st">'sentiment'</span>] = (
+            self.bert.<span class="fn">predict</span>(
+                df[<span class="st">'review_text'</span>]
+            )
+        )
+        <span class="kw">return</span> df
+</div>
+      </div>
+
+      <div>
+        <div class="code-header">
+          <span class="code-lang">reports.py — Excel Auto-Report</span>
+          <button class="copy-btn" onclick="copyCode(this,'code3')">Copy</button>
+        </div>
+        <div class="code-block" id="code3"><span class="kw">import</span> openpyxl
+<span class="kw">from</span> openpyxl.styles <span class="kw">import</span> PatternFill
+<span class="kw">from</span> openpyxl.chart <span class="kw">import</span> BarChart
+
+<span class="kw">def</span> <span class="fn">generate_excel</span>(df, path=<span class="st">"report.xlsx"</span>):
+    wb = openpyxl.<span class="fn">Workbook</span>()
+
+    <span class="cm"># Sheet 1: Executive Summary</span>
+    ws1 = wb.<span class="fn">create_sheet</span>(<span class="st">"Summary"</span>)
+    <span class="fn">write_kpis</span>(ws1, df)
+
+    <span class="cm"># Sheet 2: ML Predictions</span>
+    ws2 = wb.<span class="fn">create_sheet</span>(<span class="st">"Predictions"</span>)
+    df.<span class="fn">to_excel</span>(ws2, index=<span class="kw">False</span>)
+
+    <span class="cm"># Sheet 3: Charts</span>
+    ws3 = wb.<span class="fn">create_sheet</span>(<span class="st">"Charts"</span>)
+    chart = <span class="fn">BarChart</span>()
+    <span class="fn">build_chart</span>(chart, df)
+    ws3.<span class="fn">add_chart</span>(chart, <span class="st">"B2"</span>)
+
+    <span class="cm"># Apply conditional formatting</span>
+    <span class="fn">apply_heatmap</span>(ws2, col=<span class="st">"churn_prob"</span>)
+
+    wb.<span class="fn">save</span>(path)
+    <span class="fn">email_report</span>(path)
+</div>
+      </div>
+
+      <div>
+        <div class="code-header">
+          <span class="code-lang">scheduler.py — Cron Automation</span>
+          <button class="copy-btn" onclick="copyCode(this,'code4')">Copy</button>
+        </div>
+        <div class="code-block" id="code4"><span class="cm"># crontab -e</span>
+<span class="cm"># Every 15 min: ingest + ML</span>
+*/15 * * * * python pipeline.py
+
+<span class="cm"># Daily 06:00: full report</span>
+0 6 * * * python reports.py --full
+
+<span class="cm"># Weekly Sunday 02:00: retrain</span>
+0 2 * * 0 python retrain.py
+
+<span class="cm"># ─── Python schedule alternative ───</span>
+<span class="kw">import</span> schedule, time
+
+schedule.<span class="fn">every</span>(<span class="num">15</span>).minutes.<span class="fn">do</span>(ingest)
+schedule.<span class="fn">every</span>().day.at(<span class="st">"06:00"</span>).<span class="fn">do</span>(full_report)
+schedule.<span class="fn">every</span>().sunday.at(<span class="st">"02:00"</span>).<span class="fn">do</span>(retrain)
+
+<span class="kw">while</span> <span class="kw">True</span>:
+    schedule.<span class="fn">run_pending</span>()
+    time.<span class="fn">sleep</span>(<span class="num">60</span>)
+</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== POWER BI ===== -->
+  <div id="tab-powerbi" class="section-hidden">
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title"><span class="icon">📊</span>Power BI Integration Architecture</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+          <div style="font-size:22px;margin-bottom:6px">🐍</div>
+          <div style="font-size:12px;font-weight:600">Python pushes data</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px">powerbi-rest-api · pandas → dataset</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--blue2);border-radius:8px;padding:12px;text-align:center">
+          <div style="font-size:22px;margin-bottom:6px">⚡</div>
+          <div style="font-size:12px;font-weight:600">Auto-refresh trigger</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px">REST API call after each pipeline run</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+          <div style="font-size:22px;margin-bottom:6px">📤</div>
+          <div style="font-size:12px;font-weight:600">Embed & Share</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px">Embedded reports · Subscriptions</div>
+        </div>
+      </div>
+    </div>
+    <div class="pbi-mock">
+      <div class="pbi-header">
+        <div class="pbi-dot" style="background:#f85149"></div>
+        <div class="pbi-dot" style="background:#e3b341"></div>
+        <div class="pbi-dot" style="background:#3fb950"></div>
+        <div class="pbi-title" style="margin-left:6px">Analytics Dashboard · Power BI Report</div>
+      </div>
+      <div class="pbi-body">
+        <div class="pbi-widget">
+          <div class="pbi-wt">Total Revenue</div>
+          <div style="font-size:20px;font-weight:600;color:var(--green)">$2.47M</div>
+          <div style="font-size:10px;color:var(--green);margin-top:2px">↑ 8.3% vs last month</div>
+        </div>
+        <div class="pbi-widget">
+          <div class="pbi-wt">Churn Rate</div>
+          <div style="font-size:20px;font-weight:600;color:var(--orange)">4.2%</div>
+          <div style="font-size:10px;color:var(--green);margin-top:2px">↓ 1.1% improvement</div>
+        </div>
+        <div class="pbi-widget">
+          <div class="pbi-wt">Sentiment Score</div>
+          <div style="font-size:20px;font-weight:600;color:var(--blue)">82/100</div>
+          <div style="font-size:10px;color:var(--green);margin-top:2px">↑ 4 pts this week</div>
+        </div>
+        <div class="pbi-widget" style="grid-column:span 2">
+          <div class="pbi-wt">30-Day Revenue Forecast (LSTM)</div>
+          <div style="display:flex;align-items:flex-end;gap:3px;height:50px;margin-top:4px">
+            <div style="flex:1;background:var(--blue2);border-radius:2px 2px 0 0;height:30px"></div>
+            <div style="flex:1;background:var(--blue2);border-radius:2px 2px 0 0;height:38px"></div>
+            <div style="flex:1;background:var(--blue2);border-radius:2px 2px 0 0;height:32px"></div>
+            <div style="flex:1;background:var(--blue2);border-radius:2px 2px 0 0;height:42px"></div>
+            <div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:48px"></div>
+            <div style="flex:1;background:rgba(88,166,255,.35);border-radius:2px 2px 0 0;height:44px;border:1px dashed var(--blue)"></div>
+            <div style="flex:1;background:rgba(88,166,255,.35);border-radius:2px 2px 0 0;height:50px;border:1px dashed var(--blue)"></div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:5px">
+            <span style="font-size:10px;color:var(--text3)">■ Actual</span>
+            <span style="font-size:10px;color:var(--blue)">⬚ Forecast</span>
+          </div>
+        </div>
+        <div class="pbi-widget">
+          <div class="pbi-wt">Segments</div>
+          <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px">
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="height:6px;background:var(--blue);border-radius:2px;flex:2.2"></div>
+              <span style="font-size:10px;color:var(--text2)">44%</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="height:6px;background:var(--purple);border-radius:2px;flex:1.5"></div>
+              <span style="font-size:10px;color:var(--text2)">30%</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="height:6px;background:var(--green);border-radius:2px;flex:1.3"></div>
+              <span style="font-size:10px;color:var(--text2)">26%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== AUTOMATION ===== -->
+  <div id="tab-automation" class="section-hidden">
+    <div class="card">
+      <div class="card-title"><span class="icon">⚡</span>Full Automation Workflow</div>
+      <div class="auto-step">
+        <div class="step-num" style="background:var(--blue3);color:var(--blue)">1</div>
+        <div><div class="step-title">Cron / Task Scheduler triggers pipeline<span class="step-badge" style="background:rgba(63,185,80,.15);color:var(--green)">Every 15 min</span></div>
+        <div class="step-desc">Linux cron or Windows Task Scheduler calls <code style="font-family:var(--mono);font-size:11px;color:var(--cyan)">pipeline.py</code> on schedule. Zero manual interaction.</div></div>
+      </div>
+      <div class="auto-step">
+        <div class="step-num" style="background:var(--purple2);color:var(--purple)">2</div>
+        <div><div class="step-title">Python auto-ingests all data sources<span class="step-badge" style="background:rgba(88,166,255,.15);color:var(--blue)">Automated</span></div>
+        <div class="step-desc">SQLAlchemy pulls from databases, requests pulls from APIs, pandas reads CSV/Excel. All merged into one clean DataFrame.</div></div>
+      </div>
+      <div class="auto-step">
+        <div class="step-num" style="background:var(--green2);color:var(--green)">3</div>
+        <div><div class="step-title">AI/ML models run inference automatically<span class="step-badge" style="background:rgba(63,185,80,.15);color:var(--green)">Automated</span></div>
+        <div class="step-desc">Loaded models score every row — churn probability, revenue forecast, sentiment. Results appended to DataFrame.</div></div>
+      </div>
+      <div class="auto-step">
+        <div class="step-num" style="background:var(--orange);color:#000">4</div>
+        <div><div class="step-title">Power BI dataset refreshed via REST API<span class="step-badge" style="background:rgba(227,179,65,.15);color:var(--orange)">Auto-push</span></div>
+        <div class="step-desc">Python calls <code style="font-family:var(--mono);font-size:11px;color:var(--cyan)">POST /datasets/{id}/rows</code> — dashboards update instantly without opening Power BI.</div></div>
+      </div>
+      <div class="auto-step">
+        <div class="step-num" style="background:rgba(63,185,80,.2);color:var(--green)">5</div>
+        <div><div class="step-title">Excel report generated & emailed<span class="step-badge" style="background:rgba(63,185,80,.15);color:var(--green)">Daily 06:00</span></div>
+        <div class="step-desc">openpyxl builds a styled multi-sheet workbook with charts and heatmaps. smtplib emails it to stakeholders automatically.</div></div>
+      </div>
+      <div class="auto-step">
+        <div class="step-num" style="background:var(--red);color:#fff">6</div>
+        <div><div class="step-title">Anomaly detection & Slack/email alerts<span class="step-badge" style="background:rgba(248,81,73,.15);color:var(--red)">Real-time</span></div>
+        <div class="step-desc">If churn spike, revenue drop, or data quality issue detected → webhook fires Slack message + email with root-cause summary.</div></div>
+      </div>
+      <div class="auto-step">
+        <div class="step-num" style="background:var(--blue2);color:var(--blue)">7</div>
+        <div><div class="step-title">Weekly model retraining & auto-deploy<span class="step-badge" style="background:rgba(88,166,255,.15);color:var(--blue)">Sun 02:00</span></div>
+        <div class="step-desc">Optuna tunes hyperparameters, MLflow versions new model. If accuracy improves, model auto-promotes to production. No human needed.</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showTab(name, btn) {
+  document.querySelectorAll('[id^="tab-"]').forEach(s => {
+    s.className = 'section-hidden';
+  });
+  document.getElementById('tab-' + name).className = 'section-active';
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (btn && btn.classList) btn.classList.add('active');
+}
+
+const pipeInfoData = [
+  {icon:'🗄️',title:'Data Sources',html:'Connects to <strong style="color:var(--text)">12 data sources</strong> including PostgreSQL, REST APIs, CSV and Excel uploads. Ingested every <strong style="color:var(--blue)">15 minutes</strong> via cron.<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><span class="tag tag-blue">PostgreSQL</span><span class="tag tag-green">REST APIs</span><span class="tag tag-orange">CSV Files</span><span class="tag tag-cyan">Excel Uploads</span><span class="tag tag-purple">S3 / Cloud</span></div>'},
+  {icon:'🐍',title:'ETL / Python',html:'<strong>pandas</strong> for data manipulation, <strong>SQLAlchemy</strong> for DB connections, <strong>requests</strong> for API calls. All sources merged into a single clean DataFrame within seconds.'},
+  {icon:'🧹',title:'Clean & Transform',html:'Missing value imputation, outlier removal, feature engineering, one-hot encoding. <strong>scikit-learn</strong> pipelines ensure reproducibility. Data schema validated with <strong>Great Expectations</strong>.'},
+  {icon:'🤖',title:'AI/ML Models',html:'4 models run in parallel: <strong style="color:var(--purple)">XGBoost</strong> churn classifier, <strong style="color:var(--blue)">LSTM</strong> revenue forecaster, <strong style="color:var(--green)">BERT</strong> sentiment analyser, <strong style="color:var(--orange)">K-Means</strong> segmenter. All loaded from MLflow registry.'},
+  {icon:'📊',title:'Power BI',html:'Results pushed to Power BI dataset via <strong>REST API</strong>. Dashboards auto-refresh. DirectQuery enabled for live KPI monitoring. Embedded reports shared with stakeholders.'},
+  {icon:'📗',title:'Excel Report',html:'<strong>openpyxl</strong> generates styled multi-sheet workbooks: Executive Summary, ML Predictions, Charts. Conditional heatmaps highlight high-risk rows. Emailed automatically at 06:00 daily.'},
+  {icon:'📧',title:'Email / Alerts',html:'<strong>smtplib</strong> for email, <strong>Slack webhooks</strong> for instant alerts. Triggers on: anomaly detected, model accuracy drop, data pipeline failure, scheduled daily digest.'},
+];
+
+function showPipeInfo(i) {
+  const d = pipeInfoData[i];
+  document.querySelector('.pipe-step.active-step')?.classList.remove('active-step');
+  document.querySelectorAll('.pipe-step')[i].classList.add('active-step');
+  document.querySelector('#pipeInfoCard .card-title').innerHTML = `<span class="icon">${d.icon}</span>${d.title}`;
+  document.getElementById('pipeInfoBody').innerHTML = `<p style="color:var(--text2);font-size:13px">${d.html}</p>`;
+}
+
+function copyCode(btn, id) {
+  const code = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'Copied!';
+    btn.style.color = 'var(--green)';
+    setTimeout(() => { btn.textContent = 'Copy'; btn.style.color = ''; }, 1500);
+  });
+}
+</script>
